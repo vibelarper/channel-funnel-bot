@@ -8,7 +8,7 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, LabeledPri
 TOKEN = os.getenv("BOT_TOKEN")
 ADMIN_ID = int(os.getenv("ADMIN_ID", "0"))
 PAYMENT_TOKEN = os.getenv("PAYMENT_TOKEN", "").strip()
-CHANNEL_ID = "@larpitsehr"
+
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
@@ -39,7 +39,7 @@ def get_users():
 
 main_kb = InlineKeyboardMarkup(
     inline_keyboard=[
-        [InlineKeyboardButton(text="📢 Подписаться на канал", url="https://t.me")],
+        [InlineKeyboardButton(text="📢 Подписаться на канал", url="https://t.me/larpitsehr")],
         [InlineKeyboardButton(text="✅ Забрать бесплатный гайд", callback_data="check_sub")],
         [InlineKeyboardButton(text="💳 Купить VIP-доступ (500 ₽)", callback_data="buy_vip")]
     ]
