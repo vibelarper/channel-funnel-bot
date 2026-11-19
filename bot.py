@@ -7,7 +7,7 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, LabeledPri
 
 TOKEN = os.getenv("BOT_TOKEN")
 ADMIN_ID = int(os.getenv("ADMIN_ID", "0"))
-CHANNEL_ID = os.getenv("CHANNEL_ID", "@durov")
+CHANNEL_ID = os.getenv("CHANNEL_ID", "@larpitsehr")
 PAYMENT_TOKEN = os.getenv("PAYMENT_TOKEN", "")  # Токен от ЮKassa/RoboKassa из @BotFather
 
 bot = Bot(token=TOKEN)
@@ -38,6 +38,10 @@ def get_users():
     return users
 
 # Клавиатура: бесплатный бонус за подписку ИЛИ покупка VIP-доступа
+# В начале файла:
+
+
+# В блоке клавиатуры main_kb:
 main_kb = InlineKeyboardMarkup(
     inline_keyboard=[
         [InlineKeyboardButton(text="📢 Подписаться на канал", url="https://t.me")],
@@ -45,6 +49,7 @@ main_kb = InlineKeyboardMarkup(
         [InlineKeyboardButton(text="💳 Купить VIP-доступ (500 ₽)", callback_data="buy_vip")]
     ]
 )
+
 
 @dp.message(CommandStart())
 async def cmd_start(message: types.Message):
