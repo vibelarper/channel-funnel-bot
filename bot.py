@@ -7,8 +7,8 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, LabeledPri
 
 TOKEN = os.getenv("BOT_TOKEN")
 ADMIN_ID = int(os.getenv("ADMIN_ID", "0"))
-CHANNEL_ID = os.getenv("CHANNEL_ID", "@larpitsehr")
-PAYMENT_TOKEN = os.getenv("PAYMENT_TOKEN", "")  # Токен от ЮKassa/RoboKassa из @BotFather
+PAYMENT_TOKEN = os.getenv("PAYMENT_TOKEN", "").strip()
+CHANNEL_ID = "@larpitsehr"
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
@@ -37,19 +37,13 @@ def get_users():
     conn.close()
     return users
 
-# Клавиатура: бесплатный бонус за подписку ИЛИ покупка VIP-доступа
-# В начале файла:
-
-
-# В блоке клавиатуры main_kb:
 main_kb = InlineKeyboardMarkup(
     inline_keyboard=[
-        [InlineKeyboardButton(text="📢 Подписаться на канал",url=f"https://t.me{CHANNEL_ID}")],
+        [InlineKeyboardButton(text="📢 Подписаться на канал", url="https://t.me")],
         [InlineKeyboardButton(text="✅ Забрать бесплатный гайд", callback_data="check_sub")],
         [InlineKeyboardButton(text="💳 Купить VIP-доступ (500 ₽)", callback_data="buy_vip")]
     ]
 )
-
 
 @dp.message(CommandStart())
 async def cmd_start(message: types.Message):
@@ -60,7 +54,6 @@ async def cmd_start(message: types.Message):
         reply_markup=main_kb
     )
 
-# Проверка подписки
 @dp.callback_query(F.data == "check_sub")
 async def verify_sub(callback: types.CallbackQuery):
     try:
@@ -71,13 +64,12 @@ async def verify_sub(callback: types.CallbackQuery):
         else:
             await callback.answer("❌ Вы ещё не подписались на канал!", show_alert=True)
     except Exception:
-        await callback.answer("⚠️ Ошибка: добавьте бота администратором в канал.", show_alert=True)
+        await callback.answer("⚠️ Ошибка: добавьте бота администратором в канал @larpitsehr.", show_alert=True)
 
-# Выставление счёта на оплату
 @dp.callback_query(F.data == "buy_vip")
 async def send_vip_invoice(callback: types.CallbackQuery):
     if not PAYMENT_TOKEN:
-        await callback.answer("⚠️ Оплата в демо-режиме (не задан PAYMENT_TOKEN в Railway).", show_alert=True)
+        await callback.answer("⚠️ Не указан PAYMENT_TOKEN в Variables на Railway.", show_alert=True)
         return
 
     await callback.message.answer_invoice(
@@ -86,26 +78,23 @@ async def send_vip_invoice(callback: types.CallbackQuery):
         payload="vip_access_30d",
         provider_token=PAYMENT_TOKEN,
         currency="RUB",
-        prices=[LabeledPrice(label="Подписка на 1 месяц", amount=50000)]  # 500.00 ₽
+        prices=[LabeledPrice(label="Подписка на 1 месяц", amount=50000)]
     )
     await callback.answer()
 
-# Подтверждение платежа
 @dp.pre_checkout_query()
 async def process_pre_checkout(pre_checkout_query: PreCheckoutQuery):
     await pre_checkout_query.answer(ok=True)
 
-# Выдача доступа после успешной оплаты
 @dp.message(F.successful_payment)
 async def success_payment(message: types.Message):
     await message.answer(
         "✅ Оплата прошла успешно! Добро пожаловать в VIP-клуб.\n"
-        "Ваша персональная ссылка для входа: https://t.me+ваша_закрытая_ссылка"
+        "Ваша персональная ссылка для входа: https://t.me"
     )
     if ADMIN_ID:
         await bot.send_message(ADMIN_ID, f"💰 Новая оплата VIP-доступа от @{message.from_user.username}!")
 
-# Админ-команды
 @dp.message(Command("stats"))
 async def cmd_stats(message: types.Message):
     if message.from_user.id == ADMIN_ID:
@@ -130,7 +119,7 @@ async def cmd_send(message: types.Message):
 
 async def main():
     init_db()
-    print("Бот с оплатой и воронкой запущен!")
+    print("Бот запущен!")
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
