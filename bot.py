@@ -44,7 +44,7 @@ def get_users():
 # В блоке клавиатуры main_kb:
 main_kb = InlineKeyboardMarkup(
     inline_keyboard=[
-        [InlineKeyboardButton(text="📢 Подписаться на канал", url="https://t.me")],
+        [InlineKeyboardButton(text="📢 Подписаться на канал",url=f"https://t.me{CHANNEL_ID}")],
         [InlineKeyboardButton(text="✅ Забрать бесплатный гайд", callback_data="check_sub")],
         [InlineKeyboardButton(text="💳 Купить VIP-доступ (500 ₽)", callback_data="buy_vip")]
     ]
