@@ -40,7 +40,7 @@ def get_users():
 # Клавиатура: бесплатный бонус за подписку ИЛИ покупка VIP-доступа
 main_kb = InlineKeyboardMarkup(
     inline_keyboard=[
-        [InlineKeyboardButton(text="📢 Подписаться на канал", url=f"https://t.me{CHANNEL_ID.lstrip('@')}")],
+        [InlineKeyboardButton(text="📢 Подписаться на канал", url="https://t.me")],
         [InlineKeyboardButton(text="✅ Забрать бесплатный гайд", callback_data="check_sub")],
         [InlineKeyboardButton(text="💳 Купить VIP-доступ (500 ₽)", callback_data="buy_vip")]
     ]
